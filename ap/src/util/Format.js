@@ -10,4 +10,21 @@ class Format {
 
     }
 
+    static toTime(duration) {
+
+        let milliseconds = parseInt((duration % 1000) / 100)
+            , seconds = parseInt((duration / 1000) % 60)
+            , minutes = parseInt((duration / (1000 * 60)) % 60)
+            , hours = parseInt((duration / (1000 * 60 * 60)) % 24);
+
+        if (hours > 0) {
+            return `${hours.toString()}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+        } else {
+            return `${minutes.toString()}:${seconds.toString().padStart(2, '0')}`;
+
+        }
+
+    }
+
 }
