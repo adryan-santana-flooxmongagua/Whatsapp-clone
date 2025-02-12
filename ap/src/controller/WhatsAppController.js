@@ -175,7 +175,7 @@ class WhatsAppController {
       this.el.panelDocumentPreview.css({
         height: "calc(100% - 120px)",
       });
-
+    });
       this.el.btnClosePanelDocumentPreview.on("click", (e) => {
         this.closeAllMainPanel();
         this.el.panelMessagesContainer.show();
@@ -192,7 +192,6 @@ class WhatsAppController {
       this.el.btnCloseModalContacts.on("click", (e) => {
         this.el.modalContacts.hide();
       });
-    });
     
   }
 
