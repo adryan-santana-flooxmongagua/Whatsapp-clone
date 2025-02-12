@@ -251,9 +251,7 @@ class WhatsAppController {
     });
 
     this.el.panelEmojis.querySelectorAll(".emojik").forEach((emoji) => {
-      emoji.on("click", (e) => {
-        console.log(emoji.dataset.unicode);
-
+      emoji.on("click", (event) => {
         let img = this.el.imgEmojiDefault.cloneNode();
 
         img.style.cssText = emoji.style.cssText;
@@ -264,10 +262,28 @@ class WhatsAppController {
           img.classList.add(cls);
         });
 
-        this.el.inputText.appendChild(img);
+        let cursor = window.getSelection();
 
-        this.el.inputText.dispatchEvent(new Event('keyup'));
+        if (!cursor.focusNode || cursor.focusNode.id !== "input-text") {
+          this.el.inputText.focus();
+          cursor = window.getSelection();
+        }
+
+        let range = document.createRange();
         
+        range = cursor.getRangeAt(0);
+
+        range.deleteContents();
+
+        var frag = document.createDocumentFragment();
+
+        frag.appendChild(img);
+
+        range.insertNode(frag);
+
+        range.setStartAfter(img);
+
+        this.el.inputText.dispatchEvent(new Event("keyup"));
       });
     });
   }
