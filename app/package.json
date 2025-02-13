@@ -1,0 +1,20 @@
+{
+  "name": "ap",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js",
+    "start": "webpack-dev-server"
+  },
+  "author": "Adryan Alex.",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "webpack": "^5.97.1",
+    "webpack-dev-server": "^5.2.0"
+  },
+  "devDependencies": {
+    "webpack-cli": "^6.0.1"
+  }
+}
