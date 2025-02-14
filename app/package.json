@@ -1,13 +1,13 @@
 {
-  "name": "ap",
+  "name": "wppclone",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "webpack.config.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.config.js",
     "start": "webpack-dev-server"
   },
-  "author": "Adryan Alex.",
+  "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
