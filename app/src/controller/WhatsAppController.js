@@ -1,5 +1,6 @@
 import { Format } from "../util/Format";
 import { CameraController } from "./CameraController";
+import { DocumentPreviewController } from "./DocumentPreviewController";
 
 export class WhatsAppController {
   constructor() {
@@ -162,7 +163,7 @@ export class WhatsAppController {
         height: "calc(100% - 120px)",
       });
 
-      this._camera = new CameraController(this.el.videoCamera);  
+      this._camera = new CameraController(this.el.videoCamera);
     });
 
     this.el.btnClosePanelCamera.on("click", (e) => {
@@ -180,21 +181,18 @@ export class WhatsAppController {
       this.el.btnReshootPanelCamera.show();
       this.el.containerTakePicture.hide();
       this.el.containerSendPicture.show();
-
     });
 
-
-    this.el.btnReshootPanelCamera.on('click', e=>{
-
+    this.el.btnReshootPanelCamera.on("click", (e) => {
       this.el.pictureCamera.hide();
       this.el.videoCamera.show();
       this.el.btnReshootPanelCamera.hide();
       this.el.containerTakePicture.show();
       this.el.containerSendPicture.hide();
-
+      
     });
 
-    this.el.btnSendPicture.on('click', e =>{
+    this.el.btnSendPicture.on("click", (e) => {
 
       console.log(this.el.pictureCamera.src);
 
@@ -206,7 +204,74 @@ export class WhatsAppController {
       this.el.panelDocumentPreview.css({
         height: "calc(100% - 120px)",
       });
+
+      this.el.inputDocument.click();
     });
+
+    this.el.inputDocument.on('change', event => {
+
+      if (this.el.inputDocument.files.length) {
+
+          let file = this.el.inputDocument.files[0];
+
+          this.closeAllMainPanel();
+          this.el.panelMessagesContainer.hide();
+          this.el.panelDocumentPreview.addClass('open');
+          this.el.panelDocumentPreview.sleep(500, () => {
+              this.el.panelDocumentPreview.style.height = 'calc(100% - 120px)';
+          });
+
+
+          this._documentPreview = new DocumentPreviewController(file);
+
+          this._documentPreview.getPriviewData().then(data => {
+
+              this.el.filePanelDocumentPreview.hide();
+              this.el.imagePanelDocumentPreview.show();
+              this.el.imgPanelDocumentPreview.src = data.src;
+              this.el.imgPanelDocumentPreview.show();
+
+              this.el.infoPanelDocumentPreview.innerHTML = data.info;
+
+          }).catch(event => {
+
+              if (event.error) {
+                  console.error(event.event);
+              } else {
+
+                  switch (file.type) {
+                      case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                      case 'application/msword':
+                          this.el.iconPanelDocumentPreview.classList.value = 'jcxhw icon-doc-doc';
+                          break;
+
+                      case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+                      case 'application/vnd.ms-excel':
+                          this.el.iconPanelDocumentPreview.classList.value = 'jcxhw icon-doc-xls';
+                          break;
+
+                      case 'application/vnd.ms-powerpoint':
+                      case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+                          this.el.iconPanelDocumentPreview.classList.value = 'jcxhw icon-doc-ppt';
+                          break;
+
+                      default:
+                          this.el.iconPanelDocumentPreview.classList.value = 'jcxhw icon-doc-generic';
+                  }
+
+                  this.el.filePanelDocumentPreview.show();
+                  this.el.imagePanelDocumentPreview.hide();
+
+                  this.el.filenamePanelDocumentPreview.innerHTML = file.name;
+
+              }
+
+          });
+
+      }
+
+  });
+
     this.el.btnClosePanelDocumentPreview.on("click", (e) => {
       this.closeAllMainPanel();
       this.el.panelMessagesContainer.show();
@@ -301,7 +366,7 @@ export class WhatsAppController {
         }
 
         let range = document.createRange();
-        
+
         range = cursor.getRangeAt(0);
 
         range.deleteContents();
