@@ -160,7 +160,7 @@ export class WhatsAppController {
       this.closeAllMainPanel();
       this.el.panelCamera.addClass("open");
       this.el.panelCamera.css({
-        height: "calc(100% - 120px)",
+        height: 'calc(100% - 120px)',
       });
 
       this._camera = new CameraController(this.el.videoCamera);
@@ -202,7 +202,7 @@ export class WhatsAppController {
       this.closeAllMainPanel();
       this.el.panelDocumentPreview.addClass("open");
       this.el.panelDocumentPreview.css({
-        height: "calc(100% - 120px)",
+        height: 'calc(100% - 120px)',
       });
 
       this.el.inputDocument.click();
@@ -212,6 +212,8 @@ export class WhatsAppController {
 
       if (this.el.inputDocument.files.length) {
 
+       
+
           let file = this.el.inputDocument.files[0];
 
           this.closeAllMainPanel();
@@ -220,7 +222,7 @@ export class WhatsAppController {
           this.el.panelDocumentPreview.sleep(500, () => {
               this.el.panelDocumentPreview.style.height = 'calc(100% - 120px)';
           });
-
+ 
 
           this._documentPreview = new DocumentPreviewController(file);
 
@@ -233,11 +235,19 @@ export class WhatsAppController {
 
               this.el.infoPanelDocumentPreview.innerHTML = data.info;
 
+              this.el.panelDocumentPreview.css({
+                height: 'calc(100% - 120px)',
+              });
+
           }).catch(event => {
 
               if (event.error) {
                   console.error(event.event);
               } else {
+
+                this.el.panelDocumentPreview.css({
+                  height: 'calc(100% - 120px)',
+                });
 
                   switch (file.type) {
                       case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
