@@ -239,16 +239,12 @@ export class WhatsAppController {
                 height: 'calc(100% - 120px)',
               });
 
-          }).catch(event => {
+          }).catch(err => {
 
-              if (event.error) {
-                  console.error(event.event);
-              } else {
-
-                this.el.panelDocumentPreview.css({
-                  height: 'calc(100% - 120px)',
-                });
-
+            this.el.panelDocumentPreview.css({
+              height: 'calc(100% - 120px)',
+            });
+               
                   switch (file.type) {
                       case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
                       case 'application/msword':
@@ -272,9 +268,7 @@ export class WhatsAppController {
                   this.el.filePanelDocumentPreview.show();
                   this.el.imagePanelDocumentPreview.hide();
 
-                  this.el.filenamePanelDocumentPreview.innerHTML = file.name;
-
-              }
+                  this.el.filenamePanelDocumentPreview.innerHTML = file.name;          
 
           });
 
