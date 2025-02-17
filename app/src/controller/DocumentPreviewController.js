@@ -1,3 +1,7 @@
+const pfdjsLib = require('pdfjs-dist');
+
+pfdjsLib.GlobalWorkerOptions.workerSrc = path.resolve(__dirname, '../../dist/pdf.worker.bundle.js');
+
 export class DocumentPreviewController {
     constructor(file) {
         
@@ -9,6 +13,8 @@ export class DocumentPreviewController {
     getPreviewData(){
 
         return new Promise((s, f) =>{
+            
+            let reader = new FileReader();
 
             switch(this._file.type){
 
@@ -17,7 +23,6 @@ export class DocumentPreviewController {
                 case 'image/jpg':
                 case 'image/gif':
 
-                let reader = new FileReader();
                 reader.onload = e =>{ 
 
                     s({
@@ -35,6 +40,22 @@ export class DocumentPreviewController {
                 break;
 
                 case 'application/pdf':
+
+                reader.onload =e =>{
+
+                pfdjsLib.getDocument(new Uint8Array(reader.result)).then(pdf =>{
+
+                    console.log("pdf", pdf);
+
+                }).catch(err=>{
+
+                    f(err);
+
+                });
+
+                } 
+
+                reader.readAsArrayBuffer(this._file);
 
                 break;
 
