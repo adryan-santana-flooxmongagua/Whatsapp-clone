@@ -1,5 +1,10 @@
-export class MicrophoneController{
+import { S } from "pdfjs-dist";
+import { ClassEvent } from "../util/ClassEvent";
+
+export class MicrophoneController extends ClassEvent{
     constructor(){
+
+        super();
 
         navigator.mediaDevices.getUserMedia({
             audio: true
@@ -12,7 +17,7 @@ export class MicrophoneController{
 
             audio.play();
 
-            this.trigger('play', audio);
+            this.trigger('play', audio,);
 
         }).catch(err => {
             console.error(err);
