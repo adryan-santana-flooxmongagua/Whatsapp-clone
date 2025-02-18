@@ -1,35 +1,29 @@
-import { S } from "pdfjs-dist";
 import { ClassEvent } from "../util/ClassEvent";
 
-export class MicrophoneController extends ClassEvent{
-    constructor(){
-
+export class MicrophoneController extends ClassEvent {
+    constructor() {
         super();
 
-        navigator.mediaDevices.getUserMedia({
-            audio: true
-        }).then(stream => {
-            this._stream = stream;
-           
-            let audio = new Audio();
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+                this._stream = stream;
 
-            audio.src = URL.createObjectURL(stream);
+                let audio = new Audio();
+                audio.srcObject = stream; // Correção aqui
 
-            audio.play();
+                audio.play();
 
-            this.trigger('play', audio,);
-
-        }).catch(err => {
-            console.error(err);
-        });
-        
-
+                this.trigger('play', audio);
+            })
+            .catch(err => {
+                console.error(err);
+            });
     }
 
     stop() {
         if (this._stream) {
             this._stream.getTracks().forEach(track => track.stop());
+            this._stream = null;
         }
     }
-
 }
