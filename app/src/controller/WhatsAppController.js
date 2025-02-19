@@ -220,9 +220,9 @@ export class WhatsAppController {
           this.closeAllMainPanel();
           this.el.panelMessagesContainer.hide();
           this.el.panelDocumentPreview.addClass('open');
-          this.el.panelDocumentPreview.sleep(500, () => {
-              this.el.panelDocumentPreview.style.height = 'calc(100% - 120px)';
-          });
+          setTimeout(() => {
+            this.el.panelDocumentPreview.style.height = 'calc(100% - 120px)';
+        }, 500);
  
 
           this._documentPreview = new DocumentPreviewController(file);
