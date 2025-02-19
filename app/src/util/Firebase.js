@@ -1,4 +1,4 @@
-const firebase = require('firebase');
+const firebase = require('firebase/app');
 require('firebase/firestore');
 
 export class Firebase{
@@ -45,7 +45,7 @@ export class Firebase{
       static hd() {
 
         return firebase.storage();
-        
+
       }
 
 
