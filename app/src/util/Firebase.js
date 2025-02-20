@@ -8,13 +8,14 @@ export class Firebase{
         this._config = {
           apiKey: "AIzaSyCe3V4o9RS5T-JCwNYT9d0MoPukvjvHzGE",
           authDomain: "wppclone-3946c.firebaseapp.com",
+          databaseURL: "https://wppclone-3946c-default-rtdb.firebaseio.com",
           projectId: "wppclone-3946c",
           storageBucket: "wppclone-3946c.firebasestorage.app",
           messagingSenderId: "118093865732",
           appId: "1:118093865732:web:2697144ee8bf6618a06651",
           measurementId: "G-XXD52GF9N0"
         };
-
+        
         this.init();
 
     }
@@ -69,7 +70,7 @@ export class Firebase{
           })
           .catch(err =>{
             f(err);
-          })
+          });
 
         });
 
