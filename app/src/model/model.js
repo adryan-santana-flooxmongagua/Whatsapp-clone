@@ -11,7 +11,7 @@ export class Model extends ClassEvent {
 
         this._data = Object.assign(this._data, json);
 
-        this.trigger('datachange', this.toJSON());
+        this.trigger('datachange', this._data);
 
     }
 
