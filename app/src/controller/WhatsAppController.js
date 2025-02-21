@@ -19,14 +19,17 @@ export class WhatsAppController {
   }
 
   initAuth(){
-    this._firebase.initAuth()
-    .then(response =>{
+
+
+    this._firebase.initAuth().then(response =>{
 
        this._user = new User(response.user.email);
 
        this._user.on('datachange', data =>{
 
         document.querySelector('title').innerHTML = data.name + ' - WhatsappClone';
+
+        this.el.inputNamePanelEditProfile = data.name;
 
         if(data.photo){
 
@@ -43,9 +46,19 @@ export class WhatsAppController {
 
        });
 
-       this.el.appContent.css({
+       this._user.name = response.user.displayName;
+       this._user.email = response.user.email;
+       this._user.photo = response.user.photoURL;
+
+       this._user.save().then(()=>{
+
+         this.el.appContent.css({
         display:'flex'
        });
+
+       });
+
+      
 
       
     })
