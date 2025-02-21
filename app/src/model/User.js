@@ -2,84 +2,83 @@ import { Firebase } from "../util/firebase";
 import { Model } from "./model";
 
 export class User extends Model {
+  get name() {
+    return this._data.name;
+  }
+  set name(value) {
+    this._data.name = value;
+  }
 
-    get name() { return this._data.name; }
-    set name(value) { this._data.name = value; }
+  get email() {
+    return this._data.email;
+  }
+  set email(value) {
+    this._data.email = value;
+  }
 
-    get email() { return this._data.email; }
-    set email(value) { this._data.email = value; }
+  get photo() {
+    return this._data.photo;
+  }
+  set photo(value) {
+    this._data.photo = value;
+  }
 
-    get photo() { return this._data.photo; }
-    set photo(value) { this._data.photo = value; }
+  static getRef() {
+    return Firebase.db().collection("users");
+  }
 
-    static getRef(){
-        return Firebase.db().collection('users');
-    }
+  constructor(key) {
+    super();
 
-    constructor(key){
-        
-        super();
+    this.key = key;
 
-        this.key = key;
+    this.getByKey();
+  }
 
-        this.getByKey();
+  getByKey() {
+    return new Promise((s, f) => {
+      User.getRef()
+        .doc(this.key)
+        .onSnapshot((doc) => {
+          this.doc = doc;
 
-    }
+          this.fromJSON(doc.data());
 
-    getByKey(){
+          s(doc);
+        });
+    });
+  }
 
-        return new Promise((s, f)=>{
+  save() {
+    return User.getRef().doc(this.key).set(this.toJSON());
+  }
 
-            User.getRef().doc(this.key).onSnapshot(doc => {
+  addContact(contact) {
+    return User.getRef()
+      .doc(this.key)
+      .collection("contacts")
+      .doc(contact.email)
+      .set(contact.toJSON());
+  }
 
-                this.doc = doc;
+  getContacts() {
+    return new Promise((s, f) => {
+      User.getRef()
+        .doc(this.key)
+        .collection("contacts")
+        .onSnapshot((docs) => {
+          let contacts = [];
 
-                this.fromJSON(doc.data());
+          docs.forEach((doc) => {
+            let data = doc.data();
+            data._key = doc.key;
+            contacts.push(data);
+          });
 
-                s(doc);
+          s(docs);
 
-            });
-
-        });        
-
-    }
-
-    save(){
-
-        return User.getRef().doc(this.key).set(this.toJSON());
-
-    }
-
-    addContact(contact){
-
-        return User.getRef().doc(this.key).collection('contacts').doc(contact.email).set(contact.toJSON());
-
-    }
-
-    getContacts(){
-
-        return new Promise((s, f)=>{
-
-            User.getRef().doc(this.key).collection('contacts').onSnapshot(docs => {
-
-                let contacts = [];
-
-                docs.forEach(doc=>{
-
-                    let data = doc.data();
-                    data._key = doc.key;
-                    contacts.push(data);
-
-                });
-
-                s(docs);
-
-                this.trigger('contactschange', contacts);
-
-            });
-
-        });        
-
-    }
-
+          this.trigger("contactschange", contacts);
+        });
+    });
+  }
 }
