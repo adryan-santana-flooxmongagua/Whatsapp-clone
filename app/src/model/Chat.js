@@ -53,7 +53,7 @@ export class Chat extends Model {
 
     static createIfNotExists(meEmail, contactEmail){
 
-        return new Promise((S, f )  =>{
+        return new Promise((s, f )  =>{
 
             Chat.find(meEmail, contactEmail).then(chats => {
 

@@ -73,6 +73,8 @@ export class User extends Model {
 
     getContacts(){
 
+      return new Promise((s, f)=>{
+
       User.getContactsRef(this.email).onSnapshot(docs=>{
 
         let contacts = [];
@@ -93,6 +95,8 @@ export class User extends Model {
 
       });
 
+    });   
+    
     }
 
 }
