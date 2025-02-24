@@ -468,7 +468,7 @@ export class WhatsAppController {
     });
 
     this.el.btnSendDocument.on('click', (e) => {
-      console.log('send ');
+      console.log('send');
     });
 
     this.el.btnAttachContact.on('click', (e) => {
