@@ -1,4 +1,4 @@
-import { Model } from "./model";
+import { Model } from "./Model";
 
 export class Message extends Model {
     constructor() {
