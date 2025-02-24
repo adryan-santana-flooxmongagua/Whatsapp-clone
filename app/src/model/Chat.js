@@ -1,4 +1,5 @@
 import { Model } from "./Model";
+import { Firebase } from "../util/firebase";
 
 export class Chat extends Model {
     constructor() {
@@ -13,7 +14,7 @@ export class Chat extends Model {
 
     static getRef(){
 
-        return Firebase.db(). collection('/chats');
+        return Firebase.db().collection('/chats');
 
     } 
 

@@ -134,6 +134,8 @@ export class WhatsAppController {
 
        div.on('click', e =>{
 
+        console.log('chatid',contact.chatId);
+
         this.el.activeName.innerHTML = contact.name;
         this.el.activeStatus.innerHTML = contact.status;
 
@@ -290,7 +292,7 @@ export class WhatsAppController {
       contact.on('datachange', (data) => {
         if (data.name) {
 
-          Chat.createIfNotExist(this._user.email, contact.email).then(chat => {
+          Chat.createIfNotExists(this._user.email, contact.email).then(chat => {
 
             contact.chatId = chat.id;
 
