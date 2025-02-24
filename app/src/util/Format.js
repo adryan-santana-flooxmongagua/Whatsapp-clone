@@ -21,4 +21,21 @@ export class Format {
       return `${minutes.toString()}:${seconds.toString().padStart(2, "0")}`;
     }
   }
+
+  static dateToTime(date, locale = 'pt-BR') {
+
+    
+        return date.toLocaleTimeString(locale, { 
+          hour: '2-digit',
+          minute: '2-digit' 
+        });
+   
+
+  }
+
+  static fbTimeStampToTime(timeStamp) {
+    return timeStamp && typeof timeStamp.toDate === "function"
+      ? Format.dateToTime(timeStamp.toDate())
+      : "";
+  }
 }
