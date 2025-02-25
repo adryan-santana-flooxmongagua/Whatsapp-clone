@@ -473,9 +473,58 @@ export class WhatsAppController {
     });
 
     this.el.btnSendPicture.on('click', (e) => {
-      console.log(this.el.pictureCamera.src);
-      
-    });
+
+
+      this.el.btnSendPicture.disabled = true;
+
+      let regex = /^data:(.+);base64,(.*)$/;
+
+      let result = this.el.pictureCamera.src.match(regex);
+      let mimetype = result[1];
+      let ext = mimetype.split('/')[1];
+      let filename = `camera${Date.now()}.${ext}`;
+
+
+      let picture = new Image();
+      picture.src = this.el.pictureCamera.src;
+      picture.onload = e =>{
+        let canvas = document.createElement('canvas');
+        let context = canvas.getContext('2d');
+
+        canvas.width = picture.width;
+        canvas.height = picture.height;
+
+        context.translate(picture.width, 0);
+        context.scale(-1, 1);
+
+        context.drawImage(picture, 0, 0, canvas.width, canvas.height);
+
+      };
+
+      fetch(canvas.toDataURL(mimetype))
+      .then(res =>{ return res.arrayBuffer();})
+      .then(buffer =>{ return new File([buffer], filename, { type:mimetype });})
+      .then(file =>{
+
+        Message.sendImage(this._activeContact.chatId, this._user.email, file);
+
+        this.el.btnSendPicture.disabled = false;
+
+        this.closeAllMainPanel();
+        this._camera.stop();
+        this.btnReshootPanelCamera.hide();
+        this.pictureCamera.hide();
+        this.videoCamera.show();
+        this.containerSendPicture.hide();
+        this.containerTakePicture.show();
+        this.panelMessagesContainer.show();
+
+
+      });
+
+
+      });
+   
 
     this.el.btnAttachDocument.on('click', (e) => {
       this.closeAllMainPanel();
