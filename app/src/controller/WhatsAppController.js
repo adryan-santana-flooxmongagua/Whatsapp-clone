@@ -496,10 +496,9 @@ export class WhatsAppController {
 
         context.translate(picture.width, 0);
         context.scale(-1, 1);
-
         context.drawImage(picture, 0, 0, canvas.width, canvas.height);
 
-      };
+     
 
       fetch(canvas.toDataURL(mimetype))
       .then(res =>{ return res.arrayBuffer();})
@@ -522,7 +521,7 @@ export class WhatsAppController {
 
       });
 
-
+    };
       });
    
 

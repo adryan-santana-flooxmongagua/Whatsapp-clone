@@ -160,14 +160,16 @@ export class Message extends Model {
                                       
                 `;
 
+            
 
                 div.querySelector('.message-photo').on('load', e => {
 
                     div.querySelector('.message-photo').show();
-                    div.querySelector('._340lu').hide();
+                    div.querySelector('._34Olu').hide();
                     div.querySelector('._3v3PK').css({
                         height: 'auto'
                     });
+
                 });
 
                 break;
