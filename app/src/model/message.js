@@ -159,6 +159,17 @@ export class Message extends Model {
                         </div>
                                       
                 `;
+
+
+                div.querySelector('.message-photo').on('load', e => {
+
+                    div.querySelector('.message-photo').show();
+                    div.querySelector('._340lu').hide();
+                    div.querySelector('._3v3PK').css({
+                        height: 'auto'
+                    });
+                });
+
                 break;
 
             case 'audio':
@@ -211,7 +222,7 @@ export class Message extends Model {
                                 </div>
                                 <div class="_2fuJy">
                                     <div class="_1WliW" style="height: 55px; width: 55px;">
-                                        <img src="#" class="Qgzj8 gqwaM message-photo" style="display:none">
+                                        <img src="${this.content}" class="Qgzj8 gqwaM message-photo" style="display:none">
                                         <div class="_3ZW2E">
                                             <span data-icon="default-user">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 212 212" width="212" height="212">
@@ -279,6 +290,39 @@ export class Message extends Model {
        return div;
     }
 
+
+    static sendImage(chatId, from, file){
+
+        return new Promise((s, f) => {
+
+        let uploadTask = Firebase.hd().ref(from).child(Date.now() + '_' + file.name).put(file);
+
+        uploadTask.on('state_changed', e => {
+
+            console.info('upload', e);
+
+        }, err => {
+
+            console.error(err);
+
+        }, () => {
+
+            Message.send(
+                chatId, 
+                from, 
+                'image', 
+                uploadTask.snapshot.downloadURL).then(()=>{
+
+                s();
+
+            });
+
+        });
+        
+        return Message.send(chatId, from, 'image', '');
+
+        });
+    }
 
     static send(chatId, from, type, content){
 
