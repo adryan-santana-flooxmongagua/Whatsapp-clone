@@ -213,7 +213,17 @@ export class WhatsAppController {
 
           this.el.panelMessagesContainer.appendChild(view);
           
-        }else if (me){
+        }else {
+
+          let view = message.getViewElement(me);
+
+          this.el.panelMessagesContainer.querySelector('#_'+ data.id).innerHTML = view.innerHTML;
+
+        }
+        
+        
+        
+        if (this.el.panelMessagesContainer.querySelector('#_'+ data.id) && me){
 
          let msgEl = this.el.panelMessagesContainer.querySelector('#_'+ data.id)
 

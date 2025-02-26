@@ -187,6 +187,12 @@ export class Message extends Model {
                                       
                 `;
         
+                div.on('click', e => {
+
+                    window.open(this.content);
+
+                });
+
                 break;
 
             case 'audio':
@@ -331,7 +337,7 @@ export class Message extends Model {
 
     }
 
-    static sendDocument(chatId, from, file, preview){
+    static sendDocument(chatId, from, file, filePreview, info){
 
         Message.send(chatId, from, 'document', '').then(msgRef => {
 
@@ -341,7 +347,7 @@ export class Message extends Model {
 
                 let downloadFile = snapshot.downloadURL;
 
-                    Message.upload(filePreview, from).then(snapshotPreview => {
+                    if(filePreview){ Message.upload(filePreview, from).then(snapshotPreview => {
 
                     let downloadPreview = snapshotPreview.downloadURL;
 
@@ -350,13 +356,27 @@ export class Message extends Model {
                                 preview: downloadPreview,
                                 filename: file.name,
                                 fileType: file.type,
-                                status: 'sent'
+                                status: 'sent',
+                                info
                             },{
 
                                 merge: true
                             });
 
                     });
+                } else{
+
+                    msgRef.set({
+                        content: downloadFile,
+                        filename: file.name,
+                        fileType: file.type,
+                        status: 'sent'
+                    },{
+
+                        merge: true
+                    });
+
+                }
 
              });
 
