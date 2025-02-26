@@ -6,6 +6,8 @@ import { Firebase } from '../util/firebase';
 import { User } from '../model/User';
 import { Chat } from '../model/chat';
 import { Message } from '../model/message';
+import { Base64 } from '../util/Base64';
+
 
 export class WhatsAppController {
   constructor() {
@@ -609,7 +611,22 @@ export class WhatsAppController {
         let file = this.el.inputDocument.files[0];
         let base64 = this.el.imgPanelDocumentPreview.src;
 
-        Message.documentSend(this._activeContact.chatId, this._user.email, file, base64);
+      if(file.type === 'application/pdf'){
+
+        Base64.toFile(base64).then(filePreview =>{
+
+        Message.sendDocument(this._activeContact.chatId, this._user.email, file, base64, this.el.infoPanelDocumentPreview.innerHTML);
+        
+      });
+
+      }else{
+
+        Message.send(this._activeContact.chatId, this._user.email, file);
+
+      }
+
+      this.el.btnClosePanelDocumentPreview.click();
+
 
     });
 

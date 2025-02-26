@@ -1,7 +1,6 @@
 import { Firebase } from "../util/firebase";
 import { Model } from "./Model";
 import { Format } from "../util/Format";
-import { Base64 } from "../util/Base64";
 
 export class Message extends Model {
     constructor() {
@@ -20,8 +19,23 @@ export class Message extends Model {
     get timeStamp() { return this._data.timeStamp; }
     set timeStamp(value) { return this._data.timeStamp = value; }
 
-    get status() { return this._data.status; }
-    set status(value) { return this._data.status = value; }
+    get preview() { return this._data.preview; }
+    set preview(value) { return this._data.preview = value; }
+
+    get info() { return this._data.info; }
+    set info(value) { this._data.info = value; }
+
+    get fileType() { return this._data.fileType; }
+    set fileType(value) { this._data.fileType = value; }
+
+    get from() { return this._data.from; }
+    set from(value) { this._data.from = value; }
+
+    get size() { return this._data.size; }
+    set size(value) { this._data.size = value; }
+   
+    get filename() { return this._data.filename; }
+    set filename(value) { this._data.filename = value; }
 
     getViewElement(me = true){
 
@@ -161,8 +175,8 @@ export class Message extends Model {
                                       
                 `;
 
-            
-
+                
+        
                 div.querySelector('.message-photo').on('load', e => {
 
                     div.querySelector('.message-photo').show();
@@ -294,13 +308,7 @@ export class Message extends Model {
     }
 
 
-    static sendDocument(chatId, from, file, preview){
-
-
-
-    }
-
-    static sendImage(chatId, from, file){
+    static upload(file, from){
 
         return new Promise((s, f) => {
 
@@ -312,25 +320,72 @@ export class Message extends Model {
 
         }, err => {
 
-            console.error(err);
+            f(err);
 
         }, () => {
 
-            Message.send(
-                chatId, 
-                from, 
-                'image', 
-                uploadTask.snapshot.downloadURL).then(()=>{
+                s();        
 
-                s();
+        });
+    });
+
+    }
+
+    static sendDocument(chatId, from, file, preview){
+
+        Message.send(chatId, from, 'document', '').then(msgRef => {
+
+       
+
+         Message.upload(file, from).then(snapshot => {
+
+                let downloadFile = snapshot.downloadURL;
+
+                    Message.upload(filePreview, from).then(snapshotPreview => {
+
+                    let downloadPreview = snapshotPreview.downloadURL;
+
+                            msgRef.set({
+                                content: downloadFile,
+                                preview: downloadPreview,
+                                filename: file.name,
+                                fileType: file.type,
+                                status: 'sent'
+                            },{
+
+                                merge: true
+                            });
+
+                    });
+
+             });
+
+        
+        });
+
+       
+
+    }
+
+    static sendImage(chatId, from, file){
+
+        return new Promise((s, f) => {
+
+            Message.upload(file).then(snapshot=>{
+
+                Message.send(
+                    chatId, 
+                    from, 
+                    'image', 
+                    snapshot.downloadURL).then(()=>{
+
+                    s();
+                });
 
             });
-
-        });
         
-        return Message.send(chatId, from, 'image', '');
-
         });
+
     }
 
     static send(chatId, from, type, content){
@@ -344,7 +399,12 @@ export class Message extends Model {
                 type,
                 from 
             }).then(result =>{
-                result.parent.doc(result.id).set({
+                
+                
+                let docRef = result.parent.doc(result.id);
+                
+                
+                docRef.set({
                     status: 'sent'
 
                 },{
@@ -352,7 +412,7 @@ export class Message extends Model {
                     merge: true
                 }).then(()=>{
 
-                    s();
+                    s(docRef);
 
                 });;
             });

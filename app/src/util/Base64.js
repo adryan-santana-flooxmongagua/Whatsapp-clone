@@ -14,7 +14,7 @@ export class Base64 {
 
 
         let mimeType = Base64.getMimetype(urlBase64);
-        let ext = MimeType.split('/')[1];
+        let ext = mimeType.split('/')[1];
         let filename = `file${Date.now()}.${ext}`;
 
          return fetch(urlBase64)
