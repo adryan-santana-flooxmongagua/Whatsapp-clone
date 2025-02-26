@@ -480,8 +480,8 @@ export class WhatsAppController {
       let regex = /^data:(.+);base64,(.*)$/;
 
       let result = this.el.pictureCamera.src.match(regex);
-      let mimetype = result[1];
-      let ext = mimetype.split('/')[1];
+      let mimeType = result[1];
+      let ext = mimeType.split('/')[1];
       let filename = `camera${Date.now()}.${ext}`;
 
 
@@ -500,9 +500,9 @@ export class WhatsAppController {
 
      
 
-      fetch(canvas.toDataURL(mimetype))
+      fetch(canvas.toDataURL(mimeType))
       .then(res =>{ return res.arrayBuffer();})
-      .then(buffer =>{ return new File([buffer], filename, { type:mimetype });})
+      .then(buffer =>{ return new File([buffer], filename, { type:mimeType });})
       .then(file =>{
 
         Message.sendImage(this._activeContact.chatId, this._user.email, file);
@@ -605,7 +605,12 @@ export class WhatsAppController {
     });
 
     this.el.btnSendDocument.on('click', (e) => {
-      console.log('send');
+     
+        let file = this.el.inputDocument.files[0];
+        let base64 = this.el.imgPanelDocumentPreview.src;
+
+        Message.documentSend(this._activeContact.chatId, this._user.email, file, base64);
+
     });
 
     this.el.btnAttachContact.on('click', (e) => {
