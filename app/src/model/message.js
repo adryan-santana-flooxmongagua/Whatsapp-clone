@@ -1,6 +1,7 @@
 import { Firebase } from "../util/firebase";
 import { Model } from "./Model";
 import { Format } from "../util/Format";
+import { Base64 } from "../util/Base64";
 
 export class Message extends Model {
     constructor() {
@@ -293,9 +294,9 @@ export class Message extends Model {
     }
 
 
-    static sendDocument(){
+    static sendDocument(chatId, from, file, preview){
 
-        
+
 
     }
 
