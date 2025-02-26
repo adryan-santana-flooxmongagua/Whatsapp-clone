@@ -511,12 +511,12 @@ export class WhatsAppController {
 
         this.closeAllMainPanel();
         this._camera.stop();
-        this.btnReshootPanelCamera.hide();
-        this.pictureCamera.hide();
-        this.videoCamera.show();
-        this.containerSendPicture.hide();
-        this.containerTakePicture.show();
-        this.panelMessagesContainer.show();
+        this.el.btnReshootPanelCamera.hide();
+        this.el.pictureCamera.hide();
+        this.el.videoCamera.show();
+        this.el.containerSendPicture.hide();
+        this.el.containerTakePicture.show();
+        this.el.panelMessagesContainer.show();
 
 
       });
