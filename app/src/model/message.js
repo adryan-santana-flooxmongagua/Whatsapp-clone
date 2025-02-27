@@ -11,31 +11,40 @@ export class Message extends Model {
     set id(value) { return this._data.id = value; }
 
     get content() { return this._data.content; }
-    set content(value) { return this._data.content = value; }
+    set content(value) { this._data.content = value; }
 
     get type() { return this._data.type; }
-    set type(value) { return this._data.type = value; }
+    set type(value) { this._data.type = value; }
 
     get timeStamp() { return this._data.timeStamp; }
-    set timeStamp(value) { return this._data.timeStamp = value; }
+    set timeStamp(value) { this._data.timeStamp = value; }
+
+    get status() { return this._data.status; }
+    set status(value) { this._data.status = value; }
 
     get preview() { return this._data.preview; }
-    set preview(value) { return this._data.preview = value; }
+    set preview(value) { this._data.preview = value; }
 
-    get info() { return this._data.info; }
-    set info(value) { this._data.info = value; }
+    get filename() { return this._data.filename; }
+    set filename(value) { this._data.filename = value; }
 
     get fileType() { return this._data.fileType; }
     set fileType(value) { this._data.fileType = value; }
 
+    get size() { return this._data.size; }
+    set size(value) { this._data.size = value; }
+
     get from() { return this._data.from; }
     set from(value) { this._data.from = value; }
 
-    get size() { return this._data.size; }
-    set size(value) { this._data.size = value; }
-   
-    get filename() { return this._data.filename; }
-    set filename(value) { this._data.filename = value; }
+    get info() { return this._data.info; }
+    set info(value) { this._data.info = value; }
+
+    get photo() { return this._data.photo; }
+    set photo(value) { this._data.photo = value; }
+
+    get duration() { return this._data.duration; }
+    set duration(value) { this._data.duration = value; }
 
     getViewElement(me = true){
 
@@ -285,6 +294,93 @@ export class Message extends Model {
                         </div>
                     </div>
                 `;
+
+                if (this.photo) {
+
+                    let img = div.querySelector('.message-photo');
+                    img.src = this.photo;
+                    img.show();
+
+                }
+
+                let audioEl = div.querySelector('audio');
+                let loadEl = div.querySelector('.audio-load');
+                let btnPlay = div.querySelector('.audio-play');
+                let btnPause = div.querySelector('.audio-pause');
+                let inputRange = div.querySelector('[type="range"]');
+                let audioDuration = div.querySelector('.message-audio-duration');
+
+
+                audioEl.onloadedmetadata = e => {
+
+                    loadEl.hide();
+                    btnPlay.show();
+
+                };
+
+                audioEl.onplay = e => {
+
+                    btnPlay.hide();
+                    btnPause.show();    
+
+                }
+
+                audioEl.onpause = e => {  
+
+                    audioDuration.innerText = Format.toTime(this.duration);
+                    btnPlay.show();
+                    btnPause.hide();
+
+                 }
+
+
+                 audioEl.onended = e => {
+
+                    audioEl.currentTime = 0;
+
+                 }
+
+                 audioEl.ontimeupdate = e => {
+
+                    btnPlay.hide();
+                    btnPause.hide();
+
+                    audioDuration.innerText = Format.toTime(audioEl.currentTime * 1000);
+                    inputRange.value = (audioEl.currentTime * 100) / this.duration;
+
+                    if(audioEl.paused){
+
+                        btnPlay.show();
+
+                    }else{
+
+                        btnPause.show();
+
+                    }
+
+                 }
+
+
+                 btnPlay.on('click', e => {
+
+                    audioEl.play();
+
+                 });
+
+                 btnPause.on('click', e => {
+
+                    audioEl.pause();
+
+                 });
+
+                 inputRange.on('change', e => {
+
+                    audioEl.currentTime = (inputRange.value * this.duration) / 100; 
+
+                 });
+
+
+
                 break;
 
             default:
@@ -344,6 +440,32 @@ export class Message extends Model {
 
         });
     });
+
+    }
+
+    static sendAudio(chatId, from, file, metadata, photo){
+
+        return Message.send(chatId, from, 'audio', '').then(msgRef => {
+
+            Message.upload(file, from).then(snapshot => {
+
+                let downloadFile = snapshot.downloadURL;
+
+                msgRef.set({
+                    content: downloadFile,
+                    duration: metadata.duration,
+                    size: file.size,
+                    status: 'sent',
+                    photo,
+                    fileType: file.type
+                },{
+
+                    merge: true
+                });
+
+            });
+
+        });
 
     }
 
